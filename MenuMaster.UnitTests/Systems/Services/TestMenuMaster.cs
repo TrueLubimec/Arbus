@@ -198,25 +198,12 @@ namespace MenuMaster.UnitTests.Systems.Servieces
             // Arrange
             var menu = MenuFixtures.GetTestDishes();
             var menuMaster = new MenuMasterRepo(menu, 3);
-            var expected = new List<Dish> {
-            new Dish
-            {
-                DishId = 3,
-                DishName = "Eskimo",
-                DishDescriptions = "ice cream"
-            },
-            new Dish
-            {
-                DishId = 4,
-                DishName = "Latte",
-                DishDescriptions = "Another coffee"
-            }};
+            var expected = new List<Dish> { menu[3], menu[4] };
 
             // Act
             var result = await menuMaster.GetDishesOnPage(2);
 
             // Assert
-            result.Should().BeOfType<List<Dish>>();
             result.Should().BeEquivalentTo(expected);
         }
         #endregion
@@ -266,7 +253,7 @@ namespace MenuMaster.UnitTests.Systems.Servieces
             //Act
             var result = await menuMaster.GetAllFirstDishesOnPages();
             //Assert
-            result.Should().ContainEquivalentOf(expected);
+            result.Should().BeEquivalentTo(expected);
         }
         #endregion
     }
