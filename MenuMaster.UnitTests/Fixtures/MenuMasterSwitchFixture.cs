@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace MenuMaster.UnitTests.Fixtures
 {
-    public static class MenuFixtures
+    internal class MenuMasterSwitchFixture
     {
         public static List<Dish> GetTestDishesEmpty() => new()
         { };
         public static List<Dish> GetTestDishes(int id)
         {
-            switch (id)
+            switch (id) 
             {
-                case 1:
+                case (1):
                     return new()
                     {
                         new Dish
@@ -49,7 +49,7 @@ namespace MenuMaster.UnitTests.Fixtures
                             DishDescriptions = "Another coffee"
                         }
                     };
-                case 2:
+                case (2):
                     return new()
                     {
                         new Dish
@@ -90,7 +90,7 @@ namespace MenuMaster.UnitTests.Fixtures
                         }
 
                     };
-                case 3:
+                case (3):
                     return new()
                     {
                         new Dish
@@ -155,12 +155,12 @@ namespace MenuMaster.UnitTests.Fixtures
                         },
                         new Dish
                         {
-                            DishId = 10,
+                            DishId = 11,
                             DishName = "test7",
                             DishDescriptions = "desc for test"
                         }
                     };
-                default:
+                default: 
                     return new() {
                         new Dish
                         {
@@ -219,8 +219,8 @@ namespace MenuMaster.UnitTests.Fixtures
                 };
 
             }
-
+            
         }
-
+        
     }
 }
