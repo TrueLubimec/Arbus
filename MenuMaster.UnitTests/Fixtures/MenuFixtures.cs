@@ -1,24 +1,51 @@
 ﻿using Arbus.Entities;
-using Arbus.Servieces;
-using MenuMaster.Api.Service.Contracts;
-using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-
-
-
-//var services = new ServiceCollection(); 
-//services.AddDbContext<MenuDbContext>();
-
-
-
-internal class Program
+namespace MenuMaster.UnitTests.Fixtures
 {
-    private static void Main(string[] args)
+    public static class MenuFixtures
     {
-        var services = new ServiceCollection();
-        services.AddScoped<IMenuMasterRepo, MenuMasterRepo>();
+        public static List<Dish> GetTestDishesEmpty() => new()
+        {};
+        public static List<Dish> GetTestDishes() => new()
+        {
+            new Dish
+            {
+                DishId = 0,
+                DishName = "Matcha",
+                DishDescriptions = "Coffee"
+            },
+            new Dish
+            {
+                DishId = 1,
+                DishName = "Smoothie",
+                DishDescriptions = "Beverage"
+            },
+            new Dish
+            {
+                DishId = 2,
+                DishName = "Gin",
+                DishDescriptions = "Distilled alcochol"
+            },
+            new Dish
+            {
+                DishId = 3,
+                DishName = "Eskimo",
+                DishDescriptions = "ice cream"
+            },
+            new Dish
+            {
+                DishId = 4,
+                DishName = "Latte",
+                DishDescriptions = "Another coffee"
+            }
+        };
 
-        var menu = new List<Dish>
+        public static List<Dish> GetTestDishes2() => new()
         {
             new Dish
             {
@@ -76,42 +103,6 @@ internal class Program
             }
 
         };
-        var menu2 = new List<Dish>{
-            new Dish
-            {
-                DishId = 0,
-                DishName = "Matcha",
-                DishDescriptions = "Coffee"
-            },
-            new Dish
-            {
-                DishId = 1,
-                DishName = "Smoothie",
-                DishDescriptions = "Beverage"
-            },
-            new Dish
-            {
-                DishId = 2,
-                DishName = "Gin",
-                DishDescriptions = "Distilled alcochol"
-            },
-            new Dish
-            {
-                DishId = 3,
-                DishName = "Eskimo",
-                DishDescriptions = "ice cream"
-            },
-            new Dish
-            {
-                DishId = 4,
-                DishName = "Latte",
-                DishDescriptions = "Another coffee"
-            }
-        };
-        var emptyMenu = new List<Dish>();
-        var menuMasterService = new MenuMasterRepo(emptyMenu, 3);
 
-        var stuff = menuMasterService.GetAmountOfDishes();
-        Console.WriteLine(stuff);
     }
 }

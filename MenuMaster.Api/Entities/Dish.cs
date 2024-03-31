@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Arbus.Entities
 {
+    /// <summary>
+    /// Represents class to work with in menu... or smth like that.
+    /// </summary>
     public class Dish
     {
         public int DishId { get; set; }
