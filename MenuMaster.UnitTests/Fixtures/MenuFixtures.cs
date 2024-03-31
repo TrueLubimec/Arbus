@@ -15,6 +15,16 @@ namespace MenuMaster.UnitTests.Fixtures
         {
             switch (id)
             {
+                case 0:
+                    return new()
+                    {
+                        new Dish
+                        {
+                            DishId = 0,
+                            DishName = "Juice",
+                            DishDescriptions ="Juicy"
+                        }
+                    };
                 case 1:
                     return new()
                     {

@@ -38,10 +38,11 @@ namespace MenuMaster.UnitTests.Systems.Servieces
         }
 
         [Theory]
+        [InlineData(0,2,1)]
         [InlineData(1, 2, 5)]
         [InlineData(2, 2, 6)]
         [InlineData(3, 2, 11)]
-        [InlineData(4, 2, 9)]
+        [InlineData(-1, 2, 9)]
         public async Task GetAmountOfDishes_ListOfDishes_ReturnInt(int menuVersion, int perPage, int expected)
         {
             // Arrange
@@ -84,10 +85,11 @@ namespace MenuMaster.UnitTests.Systems.Servieces
         }
 
         [Theory]
+        [InlineData(0, 3, 1)]
         [InlineData(1, 1, 5)]
         [InlineData(2, 5, 2)]
         [InlineData(3, 2, 6)]
-        [InlineData(4, 9, 1)]
+        [InlineData(-1, 9, 1)]
         public async Task GetAmountOfPages_ListOfDishes_ReturnInt(int menuVersion,int perPage, int expected)
         {
             // Arrange
@@ -136,10 +138,11 @@ namespace MenuMaster.UnitTests.Systems.Servieces
         }
 
         [Theory]
+        [InlineData(0,2 , 1, 1)]
         [InlineData(1, 4, 2, 1)] 
         [InlineData(1, 2, 2, 2)]
         [InlineData(3, 4, 3, 3)]
-        [InlineData(4, 1, 3, 1)]
+        [InlineData(-1, 1, 3, 1)]
         public async Task GetAmountOfDishesOnPage_PageId_ReturnInt(int menuVersion,int perPage,int pageId ,int expected)
         {
             // Arrange
@@ -204,15 +207,48 @@ namespace MenuMaster.UnitTests.Systems.Servieces
         public async Task GetDishesOnPage_PageId_ReturnListOfDishes()
         {
             // Arrange
-            var menu = MenuFixtures.GetTestDishes(1);
-            var menuMaster = new MenuMasterRepo(menu, 3);
-            var expected = new List<Dish> { menu[3], menu[4] };
+            var menu0 = MenuFixtures.GetTestDishes(0);
+            var menuMaster0 = new MenuMasterRepo(menu0, 5);
+            var expected0 = new List<Dish> { menu0[0] };
+
+            var menu1 = MenuFixtures.GetTestDishes(1);
+            var menuMaster1 = new MenuMasterRepo(menu1, 3);
+            var expected1 = new List<Dish> { menu1[3], menu1[4] };
+
+            var menu2 = MenuFixtures.GetTestDishes(2);
+            var menuMaster2 = new MenuMasterRepo(menu2, 4);
+            var expected2 = new List<Dish> { menu2[4], menu2[5] };
+
+            var menu3 = MenuFixtures.GetTestDishes(3);
+            var menuMaster3 = new MenuMasterRepo(menu3, 5);
+            var expected3 = new List<Dish> { menu3[10] };
+
+            var menu4 = MenuFixtures.GetTestDishes(-1);
+            var menuMaster4 = new MenuMasterRepo(menu4, 3);
+            var expected4 = new List<Dish> { menu4[0], menu4[1], menu4[2] };
+
 
             // Act
-            var result = await menuMaster.GetDishesOnPage(2);
+            var result0 = await menuMaster0.GetDishesOnPage(1);
+
+            var result1 = await menuMaster1.GetDishesOnPage(2);
+
+            var result2 = await menuMaster2.GetDishesOnPage(2);
+
+            var result3 = await menuMaster3.GetDishesOnPage(3);
+
+            var result4 = await menuMaster4.GetDishesOnPage(1);
 
             // Assert
-            result.Should().BeEquivalentTo(expected);
+            result0.Should().BeEquivalentTo(expected0);
+
+            result1.Should().BeEquivalentTo(expected1);
+
+            result2.Should().BeEquivalentTo(expected2);
+
+            result3.Should().BeEquivalentTo(expected3);
+
+            result4.Should().BeEquivalentTo(expected4);
         }
         #endregion
 
@@ -252,16 +288,51 @@ namespace MenuMaster.UnitTests.Systems.Servieces
 
 
         [Fact] 
-        public async Task GetAllFirstDishesOnPages_ListOfDishes_ReturnListOFDishes()
+        public async Task GetAllFirstDishesOnPages_ListOfDishes_ReturnListOfDishes()
         {
-            //Arrange
-            var menu = MenuFixtures.GetTestDishes(-1);
-            var menuMaster = new MenuMasterRepo(menu, 3);
-            var expected = new List<Dish> { menu[0], menu[3], menu[6] };
-            //Act
-            var result = await menuMaster.GetAllFirstDishesOnPages();
-            //Assert
-            result.Should().BeEquivalentTo(expected);
+            // Arrange
+            var menu0 = MenuFixtures.GetTestDishes(0);
+            var menuMaster0 = new MenuMasterRepo(menu0, 3);
+            var expected0 = new List<Dish> { menu0[0] };
+
+            var menu1 = MenuFixtures.GetTestDishes(1);
+            var menuMaster1 = new MenuMasterRepo(menu1, 1);
+            var expected1 = MenuFixtures.GetTestDishes(1);
+
+            var menu2 = MenuFixtures.GetTestDishes(2);
+            var menuMaster2 = new MenuMasterRepo(menu2, 4);
+            var expected2 = new List<Dish> { menu2[0], menu2[4] };
+
+            var menu3 = MenuFixtures.GetTestDishes(3);
+            var menuMaster3 = new MenuMasterRepo(menu3, 3);
+            var expected3 = new List<Dish> { menu3[0], menu3[3], menu3[6], menu3[9] };
+
+            var menu4 = MenuFixtures.GetTestDishes(-1);
+            var menuMaster4 = new MenuMasterRepo(menu4, 4);
+            var expected4 = new List<Dish> { menu4[0], menu4[4], menu4[8] };
+
+
+            // Act
+            var result0 = await menuMaster0.GetAllFirstDishesOnPages();
+
+            var result1 = await menuMaster1.GetAllFirstDishesOnPages();
+
+            var result2 = await menuMaster2.GetAllFirstDishesOnPages();
+
+            var result3 = await menuMaster3.GetAllFirstDishesOnPages();
+
+            var result4 = await menuMaster4.GetAllFirstDishesOnPages();
+
+            // Assert
+            result0.Should().BeEquivalentTo(expected0);
+
+            result1.Should().BeEquivalentTo(expected1);
+
+            result2.Should().BeEquivalentTo(expected2);
+
+            result3.Should().BeEquivalentTo(expected3);
+
+            result4.Should().BeEquivalentTo(expected4);
         }
         #endregion
     }
