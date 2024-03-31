@@ -26,7 +26,17 @@ namespace Arbus.Servieces
             this.perPage = perPage;
         }
 
-
+        public Task<bool> IfInputDataIsCorrect()
+        {
+            if (!dishes.Any())
+            {
+                return Task.FromResult(false);
+            }
+            else if(perPage < 1) {
+                return Task.FromResult(false);
+            }
+            return Task.FromResult(true);
+        }
         
         /// <summary>
         /// Count the amount of dishes in the menu.
@@ -37,19 +47,12 @@ namespace Arbus.Servieces
         {
             try
             {
-                if (perPage < 1)
+                if (await IfInputDataIsCorrect() == false)
                 {
-                    throw new ArgumentException($"Failed to run GetAmountOfDishes method: amount of dishes per page cannot be less then 1");
+                    throw new ArgumentException("Input data is invalid!");
                 }
-                else if (dishes.Any())
-                {
-                    var tDishes = dishes.ToList();
-                    return tDishes.Count;
-                }
-                else
-                {
-                    throw new ArgumentException($"Failed to run GetAmountOfDishes method: list is empty");
-                }
+                var tDishes = dishes.ToList();
+                return tDishes.Count;
             }
             catch(Exception ex)
             {
@@ -66,23 +69,16 @@ namespace Arbus.Servieces
         {
             try
             {
-                if (perPage < 1)
+                if (await IfInputDataIsCorrect() == false)
                 {
-                    throw new ArgumentException($"Failed to run GetAmountOfDishes method: amount of dishes per page cannot be less then 1");
+                    throw new ArgumentException("Input data is invalid!");
                 }
-                if (dishes.Any())
-                {
-                    var tDishes = dishes.ToList();
-                    var length = tDishes.Count();
-
-                    decimal amountOfPages = (decimal)length / (decimal)perPage;
-                    amountOfPages = Math.Ceiling(amountOfPages);
-                    return Decimal.ToInt32(amountOfPages);
-                }
-                else
-                {
-                    throw new Exception($"Failed to run GetAmountOfPages method: list is empty");
-                }
+                var tDishes = dishes.ToList();
+                var length = tDishes.Count();
+                decimal amountOfPages = (decimal)length / (decimal)perPage;
+                amountOfPages = Math.Ceiling(amountOfPages);
+                return Decimal.ToInt32(amountOfPages);
+                
             }
             catch (Exception ex)
             {
@@ -105,22 +101,18 @@ namespace Arbus.Servieces
             }
             try
             {
-                if (dishes.Any())
+                if (await IfInputDataIsCorrect() == false)
                 {
-                    var tDishes = dishes.ToList();
-                    var length = tDishes.Count();
-                    
-                    var count = 0;
-                    for (var i = perPage * (pageId - 1);i < (perPage * pageId) && i < length; i++)
-                    {
-                        count++;
-                    }
-                    return count;
+                    throw new ArgumentException("Input data is invalid!");
                 }
-                else
+                var tDishes = dishes.ToList();
+                var length = tDishes.Count();
+                var count = 0;
+                for (var i = perPage * (pageId - 1);i < (perPage * pageId) && i < length; i++)
                 {
-                    throw new Exception($"Failed to run GetAmountOfDishesOnPage method: list is empty");
+                    count++;
                 }
+                return count;
             }
             catch(Exception ex)
             {
@@ -143,21 +135,19 @@ namespace Arbus.Servieces
 
             try
             {
-                if (dishes.Any())
+                if (await IfInputDataIsCorrect() == false)
                 {
-                    List<Dish> returnDishes = new List<Dish>();
-                    var tDishes = dishes.ToList();
-                    var length = tDishes.Count();
-                    for (var i = perPage * (pageId - 1); i < (perPage * pageId) && i < length; i++)
-                    {
-                        returnDishes.Add(tDishes[i]);
-                    }
-                    return returnDishes;
+                    throw new ArgumentException("Input data is invalid!");
                 }
-                else
+                List<Dish> returnDishes = new List<Dish>();
+                var tDishes = dishes.ToList();
+                var length = tDishes.Count();
+                for (var i = perPage * (pageId - 1); i < (perPage * pageId) && i < length; i++)
                 {
-                    throw new Exception($"Failed to run GetDishesPages method: list is empty");
+                    returnDishes.Add(tDishes[i]);
                 }
+                return returnDishes;
+
             }
             catch (Exception ex)
             {
@@ -174,22 +164,19 @@ namespace Arbus.Servieces
         {
             try
             {
-                if (dishes.Any())
+                if (await IfInputDataIsCorrect() == false)
                 {
-                    List<Dish> returnDishes = new List<Dish>();
-                    var tDishes = dishes.ToList();
-                    var length = tDishes.Count();
+                    throw new ArgumentException("Input data is invalid!");
+                }
+                List<Dish> returnDishes = new List<Dish>();
+                var tDishes = dishes.ToList();
+                var length = tDishes.Count();
  
-                    for (var i = 0; i < length; i = i + perPage)
-                    {
-                        returnDishes.Add(tDishes[i]);
-                    }
-                    return returnDishes;
-                }
-                else
+                for (var i = 0; i < length; i = i + perPage)
                 {
-                    throw new Exception($"Failed to run GetAllFirstDishesOnPages method: list is empty");
+                    returnDishes.Add(tDishes[i]);
                 }
+                return returnDishes;
             }
             catch (Exception ex)
             {

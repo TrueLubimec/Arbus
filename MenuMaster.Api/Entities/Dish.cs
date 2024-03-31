@@ -12,7 +12,7 @@ namespace Arbus.Entities
     public class Dish
     {
         public int DishId { get; set; }
-        public string DishName { get; set; }
-        public string DishDescriptions { get; set; }
+        public string? DishName { get; set; }
+        public string? DishDescriptions { get; set; }
     }
 }

@@ -14,8 +14,8 @@ namespace MenuMaster.UnitTests.Systems.Servieces
         {
             // если бы нужно было подчищать, то реализовал бы IDisposable
         }
-        #region GetAmountOfDishes
 
+        #region GetAmountOfDishes
         [Fact]
         public async Task GetAmountOfDishes_EmptyList_ThrowsException()
         {
@@ -53,10 +53,31 @@ namespace MenuMaster.UnitTests.Systems.Servieces
             // Assert
             result.Should().Be(5);
         }
-        
+
         #endregion
 
         #region GetAmountOfPages
+
+        [Fact]
+        public async Task GetAmountOfPages_EmptyList_ThrowsException()
+        {
+            var menu = MenuFixtures.GetTestDishesEmpty();
+            var menuMaster = new MenuMasterRepo(menu, 2);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<Exception>(async () => await menuMaster.GetAmountOfPages());
+        }
+
+        [Fact]
+        public async Task GetAmountOfPages_InvalidAmountPerPage_ThrowsException()
+        {
+            var menu = new List<Dish>();//MenuFixtures.GetTestDishesEmpty();
+            var menuMaster = new MenuMasterRepo(menu, 0);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<Exception>(async () => await menuMaster.GetAmountOfPages());
+        }
+
         [Theory]
         [InlineData(1, 9)]
         [InlineData(3, 3)]
@@ -73,33 +94,10 @@ namespace MenuMaster.UnitTests.Systems.Servieces
             // Assert
             result.Should().Be(expected);
         }
-
-        [Fact]
-        public async Task GetAmountOfPages_EmptyList_ThrowsException()
-        {
-            var menu = MenuFixtures.GetTestDishesEmpty();
-            var menuMaster = new MenuMasterRepo(menu, 2);
-
-            // Act & Assert
-            await Assert.ThrowsAsync<Exception>(async () => await menuMaster.GetAmountOfPages());
-        }
         #endregion
 
         #region GetAmountOfDishesOnPage
-        [Theory]
-        [InlineData(3,1,3)]
-        [InlineData(3,2,2)]
-        public async Task GetAmountOfDishesOnPage_PageId_ReturnInt(int amount,int pageId ,int expected)
-        {
-            // Arrange
-            var menu = MenuFixtures.GetTestDishes();
-            var menuMaster = new MenuMasterRepo(menu, amount);
-            // Act
-            var result = await menuMaster.GetAmountOfDishesOnPage(pageId);
 
-            // Assert
-            result.Should().Be(expected);
-        }
         [Fact]
         public async Task GetAmountOfDishesOnPage_EmptyList_ThrowsException()
         {
@@ -120,10 +118,68 @@ namespace MenuMaster.UnitTests.Systems.Servieces
             // Act & Assert
             await Assert.ThrowsAsync<Exception>(async () => await menuMaster.GetAmountOfDishesOnPage(pageId));
         }
+
+        [Fact]
+        public async Task GetAmountOfDishesOnPage_InvalidAmountPerPage_ThrowsException()
+        {
+            var menu = new List<Dish>();//MenuFixtures.GetTestDishesEmpty();
+            var menuMaster = new MenuMasterRepo(menu, 0);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<Exception>(async () => await menuMaster.GetAmountOfDishesOnPage(1));
+        }
+
+        [Theory]
+        [InlineData(3,1,3)]
+        [InlineData(3,2,2)]
+        public async Task GetAmountOfDishesOnPage_PageId_ReturnInt(int amount,int pageId ,int expected)
+        {
+            // Arrange
+            var menu = MenuFixtures.GetTestDishes();
+            var menuMaster = new MenuMasterRepo(menu, amount);
+            // Act
+            var result = await menuMaster.GetAmountOfDishesOnPage(pageId);
+
+            // Assert
+            result.Should().Be(expected);
+        }
+        
         #endregion
 
         #region GetDishesOnPage
-        [Fact] 
+        [Fact]
+        public async Task GetDishesOnPage_EmptyList_ThrowsException()
+        {
+            var menu = MenuFixtures.GetTestDishesEmpty();
+            var menuMaster = new MenuMasterRepo(menu, 2);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<Exception>(async () => await menuMaster.GetDishesOnPage(1));
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(55)]
+        public async Task GetDishesOnPage_InvalidPageId_ThrowsException(int pageId)
+        {
+            var menu = MenuFixtures.GetTestDishes2();
+            var menuMaster = new MenuMasterRepo(menu, 2);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<Exception>(async () => await menuMaster.GetDishesOnPage(pageId));
+        }
+
+        [Fact]
+        public async Task GetDishesOnPage_InvalidAmountPerPage_ThrowsException()
+        {
+            var menu = new List<Dish>();//MenuFixtures.GetTestDishesEmpty();
+            var menuMaster = new MenuMasterRepo(menu, 0);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<Exception>(async () => await menuMaster.GetDishesOnPage(1));
+        }
+
+        [Fact]
         public async Task GetDishesOnPage_PageId_ShouldBeList()
         {
             var menu = MenuFixtures.GetTestDishes();
@@ -163,32 +219,29 @@ namespace MenuMaster.UnitTests.Systems.Servieces
             result.Should().BeOfType<List<Dish>>();
             result.Should().BeEquivalentTo(expected);
         }
+        #endregion
 
+        #region GetAllFirstDishesOnPages
         [Fact]
-        public async Task GetDishesOnPage_EmptyList_ThrowsException()
+        public async Task GetAllFirstDishesOnPages_EmptyList_ThrowsException()
         {
             var menu = MenuFixtures.GetTestDishesEmpty();
             var menuMaster = new MenuMasterRepo(menu, 2);
 
             // Act & Assert
-            await Assert.ThrowsAsync<Exception>(async () => await menuMaster.GetDishesOnPage(1));
+            await Assert.ThrowsAsync<Exception>(async () => await menuMaster.GetAllFirstDishesOnPages());
         }
 
-        [Theory]
-        [InlineData(-1)]
-        [InlineData(55)]
-        public async Task GetDishesOnPage_InvalidPageId_ThrowsException(int pageId)
+        [Fact]
+        public async Task GetAllFirstDishesOnPages_InvalidAmountPerPage_ThrowsException()
         {
-            var menu = MenuFixtures.GetTestDishes2();
-            var menuMaster = new MenuMasterRepo(menu, 2);
+            var menu = new List<Dish>();//MenuFixtures.GetTestDishesEmpty();
+            var menuMaster = new MenuMasterRepo(menu, 0);
 
             // Act & Assert
-            await Assert.ThrowsAsync<Exception>(async () => await menuMaster.GetDishesOnPage(pageId));
+            await Assert.ThrowsAsync<Exception>(async () => await menuMaster.GetAllFirstDishesOnPages());
         }
 
-        #endregion
-
-        #region GetAllFirstDishesOnPages
         [Fact]
         public async Task GetAllFirstDishesOnPages_ListOfDishes_ShouldBeList()
         {
@@ -214,16 +267,6 @@ namespace MenuMaster.UnitTests.Systems.Servieces
             var result = await menuMaster.GetAllFirstDishesOnPages();
             //Assert
             result.Should().ContainEquivalentOf(expected);
-        }
-
-        [Fact]
-        public async Task GetAllFirstDishesOnPages_EmptyList_ThrowsException()
-        {
-            var menu = MenuFixtures.GetTestDishesEmpty();
-            var menuMaster = new MenuMasterRepo(menu, 2);
-
-            // Act & Assert
-            await Assert.ThrowsAsync<Exception>(async () => await menuMaster.GetAllFirstDishesOnPages());
         }
         #endregion
     }
